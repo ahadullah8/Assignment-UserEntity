@@ -1,0 +1,6 @@
+@Assignment_UserEntity_HostAddress = http://localhost:5022
+
+GET {{Assignment_UserEntity_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
