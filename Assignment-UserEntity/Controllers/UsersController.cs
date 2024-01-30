@@ -42,12 +42,16 @@ namespace Assignment_UserEntity.Controllers
         //IMapper to map the user object on userDTO 
         private readonly IMapper _mapper;
 
-        //injected to IMapper instance using dependency injection
+        //injected to IMapper instance using dependency injection in constructor
         public UsersController(IMapper mapper)
         {
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// Find user by id and send user info in response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetUser")] //defined route using attribute routing
         public IActionResult GetUser(int id)
@@ -61,12 +65,18 @@ namespace Assignment_UserEntity.Controllers
                 response.ErrorMessage = "User Not Found";
                 return BadRequest(response);
             }
+            // map the user object to userDTO object
             var userDTO = _mapper.Map<UserDTO>(user);
             response.Status = true;
             response.Body = userDTO;
             response.ErrorMessage = "Success";
             return Ok(response);
         }
+        /// <summary>
+        /// Add new user to the list
+        /// </summary>
+        /// <param name="user">User type</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
         public IActionResult AddUser(User user)
@@ -84,6 +94,11 @@ namespace Assignment_UserEntity.Controllers
             response.ErrorMessage = string.Empty;
             return Ok(response);
         }
+        /// <summary>
+        /// Deletes the user whoes id 
+        /// </summary>
+        /// <param name="id">Id of the user to be deleted</param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("RemoveUser")]
         public IActionResult DeleteUser(int id)
@@ -103,12 +118,17 @@ namespace Assignment_UserEntity.Controllers
             response.ErrorMessage= string.Empty;
             return Ok(response);
         }
-
+        /// <summary>
+        /// Updates the already existing user in the list
+        /// </summary>
+        /// <param name="user">User object along with id, to be updated</param>
+        /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser")]
         public IActionResult UpdateUser(User user)
         {
             var response = new GenericResponse<UserDTO>();
+            //itrates over users list and find the matching user and update it 
             for (int i = 0;i< users.Count; i++)
             {
                 if (users[i].Id==user.Id)
