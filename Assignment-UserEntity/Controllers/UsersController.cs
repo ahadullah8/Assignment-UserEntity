@@ -50,7 +50,7 @@ namespace Assignment_UserEntity.Controllers
 
         [HttpGet]
         [Route("GetUser")] //defined route using attribute routing
-        public IActionResult Get(int id)
+        public IActionResult GetUser(int id)
         {
             // generic response set to send generic response to the user.
             var response = new GenericResponse<UserDTO>();
@@ -58,35 +58,35 @@ namespace Assignment_UserEntity.Controllers
             if (user == null)
             {
                 response.Status = false;
-                response.Message = "User Not Found";
+                response.ErrorMessage = "User Not Found";
                 return BadRequest(response);
             }
             var userDTO = _mapper.Map<UserDTO>(user);
             response.Status = true;
             response.Body = userDTO;
-            response.Message = "Success";
+            response.ErrorMessage = "Success";
             return Ok(response);
         }
         [HttpPost]
         [Route("AddUser")]
-        public IActionResult Add(User user)
+        public IActionResult AddUser(User user)
         {
             var response = new GenericResponse<string>();
             if (user == null)
             {
                 response.Status = false;
-                response.Message = "Object is null or Empty";
+                response.ErrorMessage = "Object is null or Empty";
                 return BadRequest(response);
             }
             users.Add(user);
             response.Status = true;
             response.Body = "User Added successfully";
-            response.Message = string.Empty;
+            response.ErrorMessage = string.Empty;
             return Ok(response);
         }
         [HttpDelete]
         [Route("RemoveUser")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteUser(int id)
         {
             var response = new GenericResponse<string>();
             var user = users.Where(x=>x.Id==id).FirstOrDefault();
@@ -94,19 +94,19 @@ namespace Assignment_UserEntity.Controllers
             {
                 response.Status = false;
                 response.Body= string.Empty;
-                response.Message = $"User with id: {id} not found";
+                response.ErrorMessage = $"User with id: {id} not found";
                 return BadRequest(response);
             }
             users.Remove(user);
             response.Status = true;
             response.Body = "User removed Successfully!";
-            response.Message= string.Empty;
+            response.ErrorMessage= string.Empty;
             return Ok(response);
         }
 
         [HttpPut]
         [Route("UpdateUser")]
-        public IActionResult Update(User user)
+        public IActionResult UpdateUser(User user)
         {
             var response = new GenericResponse<UserDTO>();
             for (int i = 0;i< users.Count; i++)
@@ -119,13 +119,13 @@ namespace Assignment_UserEntity.Controllers
                     users[i].UserName = user.UserName;
                     response.Status= true;
                     response.Body = _mapper.Map<UserDTO>(users[i]);
-                    response.Message = string.Empty;
+                    response.ErrorMessage = string.Empty;
                     return Ok(response);
                 }
             }
             response.Status = false;
             response.Body = null;
-            response.Message = $"User with id: {user.Id} not found!";
+            response.ErrorMessage = $"User with id: {user.Id} not found!";
             return BadRequest(response);
         }
 
