@@ -59,7 +59,7 @@ namespace Assignment_UserEntity.Controllers
             // generic response set to send generic response to the user.
             var response = new GenericResponse<UserDTO>();
             var user = users.Where(x=>x.Id==id).FirstOrDefault(); //searching from the given list of users
-            if (user == null)
+            if (user is null)
             {
                 response.Status = false;
                 response.ErrorMessage = "User Not Found";
@@ -82,7 +82,7 @@ namespace Assignment_UserEntity.Controllers
         public IActionResult AddUser(User user)
         {
             var response = new GenericResponse<string>();
-            if (user == null)
+            if (user is null)
             {
                 response.Status = false;
                 response.ErrorMessage = "Object is null or Empty";
@@ -105,7 +105,7 @@ namespace Assignment_UserEntity.Controllers
         {
             var response = new GenericResponse<string>();
             var user = users.Where(x=>x.Id==id).FirstOrDefault();
-            if (user==null)
+            if (user is null)
             {
                 response.Status = false;
                 response.Body= string.Empty;
@@ -131,7 +131,7 @@ namespace Assignment_UserEntity.Controllers
             //itrates over users list and find the matching user and update it 
             for (int i = 0;i< users.Count; i++)
             {
-                if (users[i].Id==user.Id)
+                if (users[i].Id == user.Id)
                 {
                     users[i].FirstName = user.FirstName;
                     users[i].LastName = user.LastName;
