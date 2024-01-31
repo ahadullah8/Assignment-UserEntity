@@ -88,6 +88,7 @@ namespace Assignment_UserEntity.Controllers
                 response.ErrorMessage = "Object is null or Empty";
                 return BadRequest(response);
             }
+            //this code will run in case the user is not null
             users.Add(user);
             response.Status = true;
             response.Body = "User Added successfully";
