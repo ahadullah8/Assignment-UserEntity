@@ -8,7 +8,36 @@ namespace Assignment_UserEntity.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private static List<User> users = new List<User>();
+        //list to contain users in memory
+        private static List<User> users = new List<User>()
+        
+            {
+            new User()
+            {
+                Id = 1,
+                FirstName = "Inni",
+                LastName = "O",
+                Email = "innio@gmail.com",
+                UserName="innio"
+            },
+            new User()
+            {
+                Id = 2,
+                FirstName = "mini",
+                LastName = "O",
+                Email = "minio@gmail.com",
+                UserName="minio"
+            },
+            new User()
+            {
+                Id = 3,
+                FirstName = "tini",
+                LastName = "O",
+                Email = "tinio@gmail.com",
+                UserName="tinio"
+            }
+
+        };
         /// <summary>
         /// Find user by id and send user info in response
         /// </summary>
