@@ -63,7 +63,7 @@ namespace Assignment_UserEntity.Controllers
             {
                 response.Status = false;
                 response.ErrorMessage = "User Not Found";
-                return BadRequest(response);
+                return NotFound(response);
             }
             // map the user object to userDTO object
             var userDTO = _mapper.Map<UserDTO>(user);
@@ -111,7 +111,7 @@ namespace Assignment_UserEntity.Controllers
                 response.Status = false;
                 response.Body= string.Empty;
                 response.ErrorMessage = $"User with id: {id} not found";
-                return BadRequest(response);
+                return NotFound(response);
             }
             users.Remove(user);
             response.Status = true;
@@ -147,7 +147,7 @@ namespace Assignment_UserEntity.Controllers
             response.Status = false;
             response.Body = null;
             response.ErrorMessage = $"User with id: {id} not found!";
-            return BadRequest(response);
+            return NotFound(response);
         }
 
     }
