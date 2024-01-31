@@ -126,27 +126,27 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser")]
-        public IActionResult UpdateUser(User user)
+        public IActionResult UpdateUser(int id, UserDTO userDTO)
         {
             var response = new GenericResponse<UserDTO>();
             //itrates over users list and find the matching user and update it 
             for (int i = 0;i< users.Count; i++)
             {
-                if (users[i].Id == user.Id)
+                if (users[i].Id == id)
                 {
-                    users[i].FirstName = user.FirstName;
-                    users[i].LastName = user.LastName;
-                    users[i].Email = user.Email;
-                    users[i].UserName = user.UserName;
+                    users[i].FirstName = userDTO.FirstName;
+                    users[i].LastName = userDTO.LastName;
+                    users[i].Email = userDTO.Email;
+                    users[i].UserName = userDTO.UserName;
                     response.Status= true;
-                    response.Body = _mapper.Map<UserDTO>(users[i]);
+                    response.Body = userDTO;
                     response.ErrorMessage = string.Empty;
                     return Ok(response);
                 }
             }
             response.Status = false;
             response.Body = null;
-            response.ErrorMessage = $"User with id: {user.Id} not found!";
+            response.ErrorMessage = $"User with id: {id} not found!";
             return BadRequest(response);
         }
 
