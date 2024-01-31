@@ -9,7 +9,11 @@ namespace Assignment_UserEntity.Controllers
     public class UsersController : ControllerBase
     {
         private static List<User> users = new List<User>();
-
+        /// <summary>
+        /// Find user by id and send user info in response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetUser")]
         public string Get(int id)
@@ -21,7 +25,11 @@ namespace Assignment_UserEntity.Controllers
             }
             return $"Id: {user.Id}\nUser Name: {user.UserName}\nFirst Name: {user.FirstName}\nLast Name: {user.LastName}\nEmail: {user.Email}";
         }
-
+        /// <summary>
+        /// Add new user to the list
+        /// </summary>
+        /// <param name="user">User type</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
         public string Add(User user)
@@ -33,6 +41,11 @@ namespace Assignment_UserEntity.Controllers
             users.Add(user);
             return "User Added Successfully";
         }
+        /// <summary>
+        /// Deletes the user whoes id 
+        /// </summary>
+        /// <param name="id">Id of the user to be deleted</param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("RemoveUser")]
         public string Delete(int id)
@@ -46,6 +59,11 @@ namespace Assignment_UserEntity.Controllers
             return "User removed successfully!";
         }
 
+        /// <summary>
+        /// Updates the already existing user in the list
+        /// </summary>
+        /// <param name="user">User object along with id, to be updated</param>
+        /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser")]
         public string Update(User user)
