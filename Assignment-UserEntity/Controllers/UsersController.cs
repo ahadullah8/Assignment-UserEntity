@@ -1,6 +1,9 @@
 ﻿using Assignment_UserEntity.Model;
+using Assignment_UserEntity.Model.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Assignment_UserEntity.Controllers
 {
@@ -10,8 +13,7 @@ namespace Assignment_UserEntity.Controllers
     {
         //list to contain users in memory
         private static List<User> users = new List<User>()
-        
-            {
+        {
             new User()
             {
                 Id = 1,
@@ -44,15 +46,18 @@ namespace Assignment_UserEntity.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetUser")]
-        public string Get(int id)
+        [Route("GetUser/{id}")]
+        public IActionResult Get(int id)
         {
-            var user = users.Where(x=>x.Id==id).FirstOrDefault();
+            var user = users.Where(x => x.Id == id).FirstOrDefault();
             if (user == null)
             {
-                return $"User with id: {id} not found";
+                return NotFound(JsonConvert.SerializeObject($"User with id: {id} not found"));
             }
-            return $"Id: {user.Id}\nUser Name: {user.UserName}\nFirst Name: {user.FirstName}\nLast Name: {user.LastName}\nEmail: {user.Email}";
+            return Ok(JsonConvert.SerializeObject(user, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
         }
         /// <summary>
         /// Add new user to the list
@@ -61,14 +66,22 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
-        public string Add(User user)
+        public IActionResult Add(UserDTO? newUser)
         {
-            if (user == null)
+            if (newUser == null)
             {
-                return "Error";
+                return BadRequest(JsonConvert.SerializeObject("Object is null"));
             }
+            var user = new User()
+            {
+                Id = users.Last().Id + 1,
+                Email = newUser.Email,
+                FirstName = newUser.FirstName,
+                LastName = newUser.LastName,
+                UserName = newUser.Email,
+            };
             users.Add(user);
-            return "User Added Successfully";
+            return Ok(JsonConvert.SerializeObject("New user added!"));
         }
         /// <summary>
         /// Deletes the user whoes id 
@@ -76,16 +89,17 @@ namespace Assignment_UserEntity.Controllers
         /// <param name="id">Id of the user to be deleted</param>
         /// <returns></returns>
         [HttpDelete]
-        [Route("RemoveUser")]
-        public string Delete(int id)
+        [Route("RemoveUser/{id}")]
+        public IActionResult Delete(int id)
         {
-            var user = users.Where(x=>x.Id==id).FirstOrDefault();
-            if (user==null)
+            var user = users.Where(x => x.Id == id).FirstOrDefault();
+            if (user == null)
             {
-                return $"User with id: {id} not found";
+                return NotFound(JsonConvert.SerializeObject($"User not found"));
             }
+
             users.Remove(user);
-            return "User removed successfully!";
+            return Ok(JsonConvert.SerializeObject("User removed successfully!"));
         }
 
         /// <summary>
@@ -94,21 +108,46 @@ namespace Assignment_UserEntity.Controllers
         /// <param name="user">User object along with id, to be updated</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("UpdateUser")]
-        public string Update(User user)
+        [Route("UpdateUser/{id}")]
+        public IActionResult Update(int id, User? user)
         {
-            for (int i = 0;i< users.Count; i++)
+            //try
+            //{
+            //    for (int i = 0; i < users.Count; i++)
+            //    {
+            //        if (users[i].Id == user.Id)
+            //        {
+            //            users[i].FirstName = user.FirstName;
+            //            users[i].LastName = user.LastName;
+            //            users[i].Email = user.Email;
+            //            users[i].UserName = user.UserName;
+            //            return Ok("User info updated successfully");
+            //        }
+            //    }
+            //    return NotFound($"User with id: {user.Id} not found!");
+            //}
+            //catch (Exception e)
+            //{
+            //    return StatusCode(500,e.Message);
+            //}
+            if (user==null)
             {
-                if (users[i].Id==user.Id)
+                return BadRequest(JsonConvert.SerializeObject("User is null"));
+            }
+
+            foreach(var item in users)
+            {
+                if (item.Id == id)
                 {
-                    users[i].FirstName = user.FirstName;
-                    users[i].LastName = user.LastName;
-                    users[i].Email = user.Email;
-                    users[i].UserName = user.UserName;
-                    return "User info updated successfully";
+                    item.Email = user.Email;
+                    item.FirstName = user.FirstName;
+                    item.LastName = user.LastName;
+                    item.UserName = user.UserName;
+                    return Ok(JsonConvert.SerializeObject("User Updated Successfully"));
                 }
             }
-            return $"User with id: {user.Id} not found!";
+            return NotFound(JsonConvert.SerializeObject("User not found"));
+            
         }
 
     }
