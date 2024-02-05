@@ -8,7 +8,7 @@ namespace Assignment_UserEntity.MapperProfiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserDTO>();
+            CreateMap<User, UserDto>().ReverseMap();
         }
     }
 }

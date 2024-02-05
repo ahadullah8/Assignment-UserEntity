@@ -1,6 +1,6 @@
 ﻿namespace Assignment_UserEntity.ResponseDTO
 {
-    public class UserDTO
+    public class UserDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

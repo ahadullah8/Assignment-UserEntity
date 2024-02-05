@@ -1,5 +1,6 @@
 ﻿using Assignment_UserEntity.Model;
 using Assignment_UserEntity.ResponseDTO;
+using Assignment_UserEntity.Service.Contract;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,42 +11,12 @@ namespace Assignment_UserEntity.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        //static user list to contain the user in memory
-        private static List<User> users = new List<User>()
-        {
-            new User()
-            {
-                Id = 1,
-                FirstName = "Inni",
-                LastName = "O",
-                Email = "innio@gmail.com",
-                UserName="innio"
-            },
-            new User()
-            {
-                Id = 2,
-                FirstName = "mini",
-                LastName = "O",
-                Email = "minio@gmail.com",
-                UserName="minio"
-            },
-            new User()
-            {
-                Id = 3,
-                FirstName = "tini",
-                LastName = "O",
-                Email = "tinio@gmail.com",
-                UserName="tinio"
-            }
-
-        };
-        //IMapper to map the user object on userDTO 
-        private readonly IMapper _mapper;
+        private readonly IUserEntityService _userEntityService;
 
         //injected to IMapper instance using dependency injection in constructor
-        public UsersController(IMapper mapper)
+        public UsersController(IUserEntityService userEntityService)
         {
-            _mapper = mapper;
+            _userEntityService = userEntityService;
         }
         /// <summary>
         /// Find user by id and send user info in response
@@ -53,24 +24,10 @@ namespace Assignment_UserEntity.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetUser")] //defined route using attribute routing
+        [Route("GetUser/{id}")] //defined route using attribute routing
         public IActionResult GetUser(int id)
         {
-            // generic response set to send generic response to the user.
-            var response = new GenericResponse<UserDTO>();
-            var user = users.Where(x=>x.Id==id).FirstOrDefault(); //searching from the given list of users
-            if (user is null)
-            {
-                response.Status = false;
-                response.ErrorMessage = "User Not Found";
-                return NotFound(response);
-            }
-            // map the user object to userDTO object
-            var userDTO = _mapper.Map<UserDTO>(user);
-            response.Status = true;
-            response.Body = userDTO;
-            response.ErrorMessage = "Success";
-            return Ok(response);
+            return Ok(_userEntityService.GetUser(id));
         }
         /// <summary>
         /// Add new user to the list
@@ -79,45 +36,21 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
-        public IActionResult AddUser(User user)
+        public IActionResult AddUser(UserDto? newUser)
         {
-            var response = new GenericResponse<string>();
-            if (user is null)
-            {
-                response.Status = false;
-                response.ErrorMessage = "Object is null or Empty";
-                return BadRequest(response);
-            }
-            //this code will run in case the user is not null
-            users.Add(user);
-            response.Status = true;
-            response.Body = "User Added successfully";
-            response.ErrorMessage = string.Empty;
-            return Ok(response);
+            return Ok(_userEntityService.AddUser(newUser));
         }
-        /// <summary>
-        /// Deletes the user whoes id 
-        /// </summary>
-        /// <param name="id">Id of the user to be deleted</param>
-        /// <returns></returns>
+
         [HttpDelete]
-        [Route("RemoveUser")]
+        [Route("RemoveUser/{id}")]
         public IActionResult DeleteUser(int id)
         {
-            var response = new GenericResponse<string>();
-            var user = users.Where(x=>x.Id==id).FirstOrDefault();
-            if (user is null)
+            var res = _userEntityService.DeleteUser(id);
+            if (res.Message == "Not found")
             {
-                response.Status = false;
-                response.Body= string.Empty;
-                response.ErrorMessage = $"User with id: {id} not found";
-                return NotFound(response);
+                return NotFound(res);
             }
-            users.Remove(user);
-            response.Status = true;
-            response.Body = "User removed Successfully!";
-            response.ErrorMessage= string.Empty;
-            return Ok(response);
+            return Ok(res);
         }
         /// <summary>
         /// Updates the already existing user in the list
@@ -125,30 +58,12 @@ namespace Assignment_UserEntity.Controllers
         /// <param name="user">User object along with id, to be updated</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("UpdateUser")]
-        public IActionResult UpdateUser(int id, UserDTO userDTO)
+        [Route("UpdateUser/{id}")]
+        public IActionResult UpdateUser(int id, UserDto userDTO)
         {
-            var response = new GenericResponse<UserDTO>();
-            //itrates over users list and find the matching user and update it 
-            for (int i = 0;i< users.Count; i++)
-            {
-                if (users[i].Id == id)
-                {
-                    users[i].FirstName = userDTO.FirstName;
-                    users[i].LastName = userDTO.LastName;
-                    users[i].Email = userDTO.Email;
-                    users[i].UserName = userDTO.UserName;
-                    response.Status= true;
-                    response.Body = userDTO;
-                    response.ErrorMessage = string.Empty;
-                    return Ok(response);
-                }
-            }
-            response.Status = false;
-            response.Body = null;
-            response.ErrorMessage = $"User with id: {id} not found!";
-            return NotFound(response);
+            return Ok(_userEntityService.UpdateUser(id, userDTO));
         }
+
 
     }
 }

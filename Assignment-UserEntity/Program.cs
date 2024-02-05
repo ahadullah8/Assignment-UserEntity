@@ -1,4 +1,7 @@
 
+using Assignment_UserEntity.Service;
+using Assignment_UserEntity.Service.Contract;
+
 namespace Assignment_UserEntity
 {
     public class Program
@@ -10,6 +13,7 @@ namespace Assignment_UserEntity
             // Add services to the container.
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddControllers();
+            builder.Services.AddScoped<IUserEntityService, UserEntityService>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
