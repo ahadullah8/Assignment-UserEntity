@@ -75,15 +75,15 @@ namespace Assignment_UserEntity.Service
             ServiceResponse<UserDto> response = new();
 
             //get the matching user and update its data
-            foreach(var item in UsersData.UsersList)
+            foreach (var item in UsersData.UsersList)
             {
-                if (item.Id==id)
+                if (item.Id == id)
                 {
                     item.Email = updateUser.Email;
                     item.FirstName = updateUser.FirstName;
                     item.LastName = updateUser.LastName;
                     item.UserName = updateUser.UserName;
-                    response.Success= true;
+                    response.Success = true;
                     response.Message = "User updated";
                     response.Data = updateUser;
                     return response;

@@ -1,8 +1,5 @@
-﻿using Assignment_UserEntity.Model;
-using Assignment_UserEntity.ResponseDTO;
+﻿using Assignment_UserEntity.ResponseDTO;
 using Assignment_UserEntity.Service.Contract;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assignment_UserEntity.Controllers
@@ -11,9 +8,10 @@ namespace Assignment_UserEntity.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+
         private readonly IUserEntityService _userEntityService;
 
-        //injected to IMapper instance using dependency injection in constructor
+        //userEntitySerivce is injected
         public UsersController(IUserEntityService userEntityService)
         {
             _userEntityService = userEntityService;

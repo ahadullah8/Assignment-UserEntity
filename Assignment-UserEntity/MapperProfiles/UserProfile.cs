@@ -4,7 +4,7 @@ using AutoMapper;
 
 namespace Assignment_UserEntity.MapperProfiles
 {
-    public class UserProfile: Profile
+    public class UserProfile : Profile
     {
         public UserProfile()
         {
