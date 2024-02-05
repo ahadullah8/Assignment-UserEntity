@@ -6,7 +6,7 @@ namespace Assignment_UserEntity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
 
         private readonly IUserEntityService _userEntityService;
@@ -43,12 +43,7 @@ namespace Assignment_UserEntity.Controllers
         [Route("RemoveUser/{id}")]
         public IActionResult DeleteUser(int id)
         {
-            var res = _userEntityService.DeleteUser(id);
-            if (res.Message == "Not found")
-            {
-                return NotFound(res);
-            }
-            return Ok(res);
+            return Ok(_userEntityService.DeleteUser(id));
         }
         /// <summary>
         /// Updates the already existing user in the list
