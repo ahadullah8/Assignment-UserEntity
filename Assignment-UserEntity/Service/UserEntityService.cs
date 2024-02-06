@@ -1,5 +1,5 @@
 ﻿using Assignment_UserEntity.Model;
-using Assignment_UserEntity.ResponseDTO;
+using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Service.Contract;
 using Assignment_UserEntity.ServiceResponder;
 using AutoMapper;
@@ -17,6 +17,7 @@ namespace Assignment_UserEntity.Service
         }
         public ServiceResponse<UserDto> AddUser(UserDto? newUser)
         {
+
             ServiceResponse<UserDto> response = new();
             if (newUser == null)
             {
@@ -44,12 +45,12 @@ namespace Assignment_UserEntity.Service
             {
                 UsersData.UsersList.Remove(user);
                 response.Success = true;
-                response.Data = $"User with id: {id} is removed successfully!";
-                response.Message = "User Removed!";
+                response.Data = $"User with id: {id} is removed successfully";
+                response.Message = "User Removed";
                 return response;
             }
             response.Success = false;
-            response.Message = "Not found";
+            response.Message = "User not found";
             return response;
 
         }
@@ -58,15 +59,16 @@ namespace Assignment_UserEntity.Service
         {
             ServiceResponse<UserDto> response = new();
             var userDetails = UsersData.UsersList.Find(x => x.Id == id);
+            //check if user found or not
             if (userDetails is object)
             {
                 response.Success = true;
                 response.Data = _mapper.Map<UserDto>(userDetails);
-                response.Message = "User details sent";
+                response.Message = "User found";
                 return response;
             }
             response.Success = false;
-            response.Message = "User Not Found!";
+            response.Message = "User not found!";
             return response;
         }
 
@@ -91,7 +93,7 @@ namespace Assignment_UserEntity.Service
             }
 
             response.Success = false;
-            response.Message = "Not found";
+            response.Message = "User not found";
             return response;
         }
     }

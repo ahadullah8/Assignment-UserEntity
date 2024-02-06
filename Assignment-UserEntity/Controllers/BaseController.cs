@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Resources;
 
 namespace Assignment_UserEntity.Controllers
 {
@@ -11,31 +12,27 @@ namespace Assignment_UserEntity.Controllers
     {
         public override OkObjectResult Ok([ActionResultObjectValue] object? value)
         {
-            if (value == null)
-            {
-                return new OkObjectResult(new
-                {
-                    statusCode = StatusCodes.Status404NotFound,
-                    data = value,
-                    Message = "Not found"
-                });
-            }
-
-            return new OkObjectResult(new
-            {
-                statusCode = StatusCodes.Status200OK,
-                data = value,
-                message = "Success"
-            });
+            ResponseDto response = new();
+            response.StatusCode = StatusCodes.Status200OK;
+            response.Message = "Success";
+            response.Payload = value;
+            return new OkObjectResult(response);
+        }
+        protected OkObjectResult Ok([ActionResultObjectValue] object? value, string? message)
+        {
+            ResponseDto response = new();
+            response.StatusCode = StatusCodes.Status200OK;
+            response.Message = message;
+            response.Payload = value;
+            return new OkObjectResult(response);
         }
 
         public override BadRequestObjectResult BadRequest([ActionResultObjectValue] object? value)
         {
-            return new BadRequestObjectResult(new
-            {
-                StatusCode = StatusCodes.Status400BadRequest,
-                message = value
-            });
+            ResponseDto response = new();
+            response.StatusCode = StatusCodes.Status400BadRequest;
+            response.Message = value.ToString();
+            return new BadRequestObjectResult(response);
         }
     }
 }

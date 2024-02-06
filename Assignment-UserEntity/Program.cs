@@ -1,6 +1,7 @@
 
 using Assignment_UserEntity.Service;
 using Assignment_UserEntity.Service.Contract;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Assignment_UserEntity
 {
@@ -9,7 +10,10 @@ namespace Assignment_UserEntity
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             // Add services to the container.
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddControllers();

@@ -1,4 +1,4 @@
-﻿using Assignment_UserEntity.ResponseDTO;
+﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.ServiceResponder;
 
 namespace Assignment_UserEntity.Service.Contract

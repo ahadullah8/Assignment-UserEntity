@@ -1,5 +1,5 @@
 ﻿using Assignment_UserEntity.Model;
-using Assignment_UserEntity.ResponseDTO;
+using Assignment_UserEntity.Dtos;
 using AutoMapper;
 
 namespace Assignment_UserEntity.MapperProfiles

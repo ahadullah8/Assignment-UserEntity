@@ -1,4 +1,4 @@
-﻿using Assignment_UserEntity.ResponseDTO;
+﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Service.Contract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +25,20 @@ namespace Assignment_UserEntity.Controllers
         [Route("GetUser/{id}")] //defined route using attribute routing
         public IActionResult GetUser(int id)
         {
-            return Ok(_userEntityService.GetUser(id));
+            try
+            {
+                var res = _userEntityService.GetUser(id);
+                if (res.Success)
+                {
+                    return Ok(res.Data);
+                }
+                return BadRequest(res.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// Add new user to the list
@@ -34,16 +47,46 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
-        public IActionResult AddUser(UserDto? newUser)
+        public IActionResult AddUser(UserDto newUser)
         {
-            return Ok(_userEntityService.AddUser(newUser));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("One or more validations failed");
+            }
+            try
+            {
+                var res = _userEntityService.AddUser(newUser);
+                if (!res.Success)
+                {
+                    return BadRequest(res.Message);
+                }
+                return Ok(res.Data);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
         [Route("RemoveUser/{id}")]
         public IActionResult DeleteUser(int id)
         {
-            return Ok(_userEntityService.DeleteUser(id));
+            try
+            {
+                var res = _userEntityService.DeleteUser(id);
+                if (!res.Success)
+                {
+                    return BadRequest(res.Message);
+                }
+                return Ok(res.Data);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// Updates the already existing user in the list
@@ -54,9 +97,23 @@ namespace Assignment_UserEntity.Controllers
         [Route("UpdateUser/{id}")]
         public IActionResult UpdateUser(int id, UserDto userDTO)
         {
-            return Ok(_userEntityService.UpdateUser(id, userDTO));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("One or more validations failed");
+            }
+            try
+            {
+                var res = _userEntityService.UpdateUser(id, userDTO);
+                if (!res.Success)
+                {
+                    return BadRequest(res.Message);
+                }
+                return Ok(res.Data,res.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-
     }
 }
