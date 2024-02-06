@@ -30,7 +30,7 @@ namespace Assignment_UserEntity.Controllers
                 var res = _userEntityService.GetUser(id);
                 if (res.Success)
                 {
-                    return Ok(res.Data);
+                    return Ok(res.Data,res.Message);
                 }
                 return BadRequest(res.Message);
 
@@ -60,7 +60,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data);
+                return Ok(res.Data,res.Message);
 
             }
             catch (Exception ex)
@@ -80,7 +80,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data);
+                return Ok(res.Data, res.Message);
 
             }
             catch (Exception ex)
