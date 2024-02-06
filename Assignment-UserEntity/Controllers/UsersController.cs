@@ -1,63 +1,44 @@
-﻿using Assignment_UserEntity.Model;
-using Assignment_UserEntity.Model.DTOs;
-using Microsoft.AspNetCore.Http;
+using Assignment_UserEntity.Dtos;
+using Assignment_UserEntity.Service.Contract;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Assignment_UserEntity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
-        //list to contain users in memory
-        private static List<User> users = new List<User>()
-        {
-            new User()
-            {
-                Id = 1,
-                FirstName = "Inni",
-                LastName = "O",
-                Email = "innio@gmail.com",
-                UserName="innio"
-            },
-            new User()
-            {
-                Id = 2,
-                FirstName = "mini",
-                LastName = "O",
-                Email = "minio@gmail.com",
-                UserName="minio"
-            },
-            new User()
-            {
-                Id = 3,
-                FirstName = "tini",
-                LastName = "O",
-                Email = "tinio@gmail.com",
-                UserName="tinio"
-            }
 
-        };
+        private readonly IUserEntityService _userEntityService;
+
+        //userEntitySerivce is injected
+        public UsersController(IUserEntityService userEntityService)
+        {
+            _userEntityService = userEntityService;
+        }
         /// <summary>
         /// Find user by id and send user info in response
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetUser/{id}")]
-        public IActionResult Get(int id)
+        [Route("GetUser/{id}")] //defined route using attribute routing
+        public IActionResult GetUser(int id)
         {
-            var user = users.Where(x => x.Id == id).FirstOrDefault();
-            if (user == null)
+            try
             {
-                return NotFound(JsonConvert.SerializeObject($"User with id: {id} not found"));
+                var res = _userEntityService.GetUser(id);
+                if (res.Success)
+                {
+                    return Ok(res.Data);
+                }
+                return BadRequest(res.Message);
+
             }
-            return Ok(JsonConvert.SerializeObject(user, new JsonSerializerSettings
+            catch (Exception ex)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            }));
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// Add new user to the list
@@ -66,42 +47,47 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
-        public IActionResult Add(UserDTO? newUser)
+        public IActionResult AddUser(UserDto newUser)
         {
-            if (newUser == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest(JsonConvert.SerializeObject("Object is null"));
+                return BadRequest("One or more validations failed");
             }
-            var user = new User()
+            try
             {
-                Id = users.Last().Id + 1,
-                Email = newUser.Email,
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName,
-                UserName = newUser.Email,
-            };
-            users.Add(user);
-            return Ok(JsonConvert.SerializeObject("New user added!"));
+                var res = _userEntityService.AddUser(newUser);
+                if (!res.Success)
+                {
+                    return BadRequest(res.Message);
+                }
+                return Ok(res.Data);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-        /// <summary>
-        /// Deletes the user whoes id 
-        /// </summary>
-        /// <param name="id">Id of the user to be deleted</param>
-        /// <returns></returns>
+
         [HttpDelete]
         [Route("RemoveUser/{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteUser(int id)
         {
-            var user = users.Where(x => x.Id == id).FirstOrDefault();
-            if (user == null)
+            try
             {
-                return NotFound(JsonConvert.SerializeObject($"User not found"));
+                var res = _userEntityService.DeleteUser(id);
+                if (!res.Success)
+                {
+                    return BadRequest(res.Message);
+                }
+                return Ok(res.Data);
+
             }
-
-            users.Remove(user);
-            return Ok(JsonConvert.SerializeObject("User removed successfully!"));
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
         /// <summary>
         /// Updates the already existing user in the list
         /// </summary>
@@ -109,46 +95,25 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser/{id}")]
-        public IActionResult Update(int id, User? user)
+        public IActionResult UpdateUser(int id, UserDto userDTO)
         {
-            //try
-            //{
-            //    for (int i = 0; i < users.Count; i++)
-            //    {
-            //        if (users[i].Id == user.Id)
-            //        {
-            //            users[i].FirstName = user.FirstName;
-            //            users[i].LastName = user.LastName;
-            //            users[i].Email = user.Email;
-            //            users[i].UserName = user.UserName;
-            //            return Ok("User info updated successfully");
-            //        }
-            //    }
-            //    return NotFound($"User with id: {user.Id} not found!");
-            //}
-            //catch (Exception e)
-            //{
-            //    return StatusCode(500,e.Message);
-            //}
-            if (user==null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest(JsonConvert.SerializeObject("User is null"));
+                return BadRequest("One or more validations failed");
             }
-
-            foreach(var item in users)
+            try
             {
-                if (item.Id == id)
+                var res = _userEntityService.UpdateUser(id, userDTO);
+                if (!res.Success)
                 {
-                    item.Email = user.Email;
-                    item.FirstName = user.FirstName;
-                    item.LastName = user.LastName;
-                    item.UserName = user.UserName;
-                    return Ok(JsonConvert.SerializeObject("User Updated Successfully"));
+                    return BadRequest(res.Message);
                 }
+                return Ok(res.Data,res.Message);
             }
-            return NotFound(JsonConvert.SerializeObject("User not found"));
-            
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
     }
 }

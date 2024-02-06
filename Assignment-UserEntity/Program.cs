@@ -1,5 +1,8 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+
+using Assignment_UserEntity.Service;
+using Assignment_UserEntity.Service.Contract;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Assignment_UserEntity
 {
     public class Program
@@ -7,10 +10,14 @@ namespace Assignment_UserEntity
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             // Add services to the container.
-
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddControllers();
+            builder.Services.AddScoped<IUserEntityService, UserEntityService>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
