@@ -11,9 +11,11 @@ namespace Assignment_UserEntity.Service
     public class UserEntityService : IUserEntityService
     {
         private readonly IMapper _mapper;
-        public UserEntityService(IMapper mapper)
+        private readonly AppDbContext _context;
+        public UserEntityService(IMapper mapper, AppDbContext context)
         {
             _mapper = mapper;
+            _context = context;
         }
         public ServiceResponse<UserDto> AddUser(UserDto? newUser)
         {
@@ -26,6 +28,8 @@ namespace Assignment_UserEntity.Service
                 return response;
             }
             var toAdd = _mapper.Map<User>(newUser);
+            _context.Users.Add(toAdd);
+            _context.SaveChanges();
             toAdd.Id = UsersData.UsersList.Last().Id + 1;
             UsersData.UsersList.Add(toAdd);
             response.Success = true;
