@@ -18,7 +18,7 @@ namespace Assignment_UserEntity.Controllers
             response.Payload = value;
             return new OkObjectResult(response);
         }
-        protected OkObjectResult Ok([ActionResultObjectValue] object? value, string? message)
+        protected OkObjectResult Ok([ActionResultObjectValue] object? value, string message)
         {
             ResponseDto response = new();
             response.StatusCode = StatusCodes.Status200OK;
