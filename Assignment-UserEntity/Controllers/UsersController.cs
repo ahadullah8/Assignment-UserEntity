@@ -23,14 +23,14 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
-        public IActionResult GetUser(int id)
+        public async Task<IActionResult> GetUserAsync(int id)
         {
             try
             {
-                var res = _userEntityService.GetUser(id);
+                var res = await _userEntityService.GetUserAsync(id);
                 if (res.Success)
                 {
-                    return Ok(res.Data);
+                    return Ok(res.Data, res.Message);
                 }
                 return BadRequest(res.Message);
 
@@ -47,7 +47,7 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
-        public IActionResult AddUser(UserDto newUser)
+        public async Task<IActionResult> AddUserAsync(UserDto newUser)
         {
             if (!ModelState.IsValid)
             {
@@ -55,12 +55,12 @@ namespace Assignment_UserEntity.Controllers
             }
             try
             {
-                var res = _userEntityService.AddUser(newUser);
+                var res = await _userEntityService.AddUserAsync(newUser);
                 if (!res.Success)
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data);
+                return Ok(res.Data,res.Message);
 
             }
             catch (Exception ex)
@@ -69,18 +69,23 @@ namespace Assignment_UserEntity.Controllers
             }
         }
 
+        /// <summary>
+        /// Find Deletes the user whoes id is given
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("RemoveUser/{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUserAsync(int id)
         {
             try
             {
-                var res = _userEntityService.DeleteUser(id);
+                var res = await _userEntityService.DeleteUserAsync(id);
                 if (!res.Success)
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data);
+                return Ok(res.Data,res.Message);
 
             }
             catch (Exception ex)
@@ -95,7 +100,7 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser/{id}")]
-        public IActionResult UpdateUser(int id, UserDto userDTO)
+        public async Task<IActionResult> UpdateUserAsync(int id, UserDto userDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +108,7 @@ namespace Assignment_UserEntity.Controllers
             }
             try
             {
-                var res = _userEntityService.UpdateUser(id, userDTO);
+                var res = await _userEntityService.UpdateUserAsync(id, userDTO);
                 if (!res.Success)
                 {
                     return BadRequest(res.Message);

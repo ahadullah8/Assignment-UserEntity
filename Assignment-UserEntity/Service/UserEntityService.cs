@@ -5,6 +5,8 @@ using Assignment_UserEntity.ServiceResponder;
 using AutoMapper;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace Assignment_UserEntity.Service
 {
@@ -17,7 +19,7 @@ namespace Assignment_UserEntity.Service
             _mapper = mapper;
             _context = context;
         }
-        public ServiceResponse<UserDto> AddUser(UserDto? newUser)
+        public async Task<ServiceResponse<UserDto>> AddUserAsync(UserDto? newUser)
         {
 
             ServiceResponse<UserDto> response = new();
@@ -28,10 +30,8 @@ namespace Assignment_UserEntity.Service
                 return response;
             }
             var toAdd = _mapper.Map<User>(newUser);
-            _context.Users.Add(toAdd);
-            _context.SaveChanges();
-            toAdd.Id = UsersData.UsersList.Last().Id + 1;
-            UsersData.UsersList.Add(toAdd);
+            await _context.Users.AddAsync(toAdd);
+            await Save();
             response.Success = true;
             response.Message = "User Added Successfully";
             response.Data = newUser;
@@ -39,15 +39,15 @@ namespace Assignment_UserEntity.Service
 
         }
 
-        public ServiceResponse<string> DeleteUser(int id)
+        public async Task<ServiceResponse<string>> DeleteUserAsync(int id)
         {
             ServiceResponse<string> response = new();
-
+            var user = await _context.Users.FindAsync(id);
             //find user by id
-            var user = UsersData.UsersList.Find(x => x.Id == id);
-            if (user != null)
+            if (user is object)
             {
-                UsersData.UsersList.Remove(user);
+                _context.Users.Remove(user);
+                await Save();
                 response.Success = true;
                 response.Data = $"User with id: {id} is removed successfully";
                 response.Message = "User Removed";
@@ -59,10 +59,10 @@ namespace Assignment_UserEntity.Service
 
         }
 
-        public ServiceResponse<UserDto> GetUser(int id)
+        public async Task<ServiceResponse<UserDto>> GetUserAsync(int id)
         {
             ServiceResponse<UserDto> response = new();
-            var userDetails = UsersData.UsersList.Find(x => x.Id == id);
+            var userDetails = await _context.Users.FindAsync(id);
             //check if user found or not
             if (userDetails is object)
             {
@@ -76,29 +76,37 @@ namespace Assignment_UserEntity.Service
             return response;
         }
 
-        public ServiceResponse<UserDto> UpdateUser(int id, UserDto updateUser)
+        public async Task<ServiceResponse<UserDto>> UpdateUserAsync(int id, UserDto updateUser)
         {
             ServiceResponse<UserDto> response = new();
-
             //get the matching user and update its data
-            foreach (var item in UsersData.UsersList)
+            var toUpdate = await _context.Users.FindAsync(id);
+            if (toUpdate is object)
             {
-                if (item.Id == id)
-                {
-                    item.Email = updateUser.Email;
-                    item.FirstName = updateUser.FirstName;
-                    item.LastName = updateUser.LastName;
-                    item.UserName = updateUser.UserName;
-                    response.Success = true;
-                    response.Message = "User updated";
-                    response.Data = updateUser;
-                    return response;
-                }
+                toUpdate.Email = updateUser.Email;
+                toUpdate.UserName = updateUser.UserName;
+                toUpdate.FirstName = updateUser.FirstName;
+                toUpdate.LastName = updateUser.LastName;
+                _context.Users.Update(toUpdate);
+                await Save();
+                response.Success = true;
+                response.Message = "User updated";
+                response.Data = updateUser;
+                return response;
             }
-
             response.Success = false;
             response.Message = "User not found";
             return response;
+        }
+
+        private async Task<bool> Save()
+        {
+            var a = await _context.SaveChangesAsync();
+            if (a >= 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
