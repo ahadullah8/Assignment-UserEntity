@@ -25,12 +25,16 @@ namespace Assignment_UserEntity.Controllers
         [Route("GetUser/{id}")] //defined route using attribute routing
         public IActionResult GetUser(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id + " is not a valid id");
+            }
             try
             {
                 var res = _userEntityService.GetUser(id);
                 if (res.Success)
                 {
-                    return Ok(res.Data,res.Message);
+                    return Ok(res.Data, res.Message);
                 }
                 return BadRequest(res.Message);
 
@@ -60,7 +64,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data,res.Message);
+                return Ok(res.Data, res.Message);
 
             }
             catch (Exception ex)
@@ -73,6 +77,10 @@ namespace Assignment_UserEntity.Controllers
         [Route("RemoveUser/{id}")]
         public IActionResult DeleteUser(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id + " is not a valid id");
+            }
             try
             {
                 var res = _userEntityService.DeleteUser(id);
@@ -97,6 +105,10 @@ namespace Assignment_UserEntity.Controllers
         [Route("UpdateUser/{id}")]
         public IActionResult UpdateUser(int id, UserDto userDTO)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id + " is not a valid id");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest("One or more validations failed");
@@ -108,7 +120,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data,res.Message);
+                return Ok(res.Data, res.Message);
             }
             catch (Exception ex)
             {
