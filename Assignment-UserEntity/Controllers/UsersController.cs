@@ -27,7 +27,7 @@ namespace Assignment_UserEntity.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(id);
+                return BadRequest(id + " is not a valid id");
             }
             try
             {
@@ -82,6 +82,10 @@ namespace Assignment_UserEntity.Controllers
         [Route("RemoveUser/{id}")]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id + " is not a valid id");
+            }
             try
             {
                 var res = await _userEntityService.DeleteUserAsync(id);
@@ -106,6 +110,10 @@ namespace Assignment_UserEntity.Controllers
         [Route("UpdateUser/{id}")]
         public async Task<IActionResult> UpdateUserAsync(int id, UserDto userDTO)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id + " is not a valid id");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest("One or more validations failed");
