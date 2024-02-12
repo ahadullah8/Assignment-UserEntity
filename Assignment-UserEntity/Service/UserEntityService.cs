@@ -3,10 +3,7 @@ using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Service.Contract;
 using Assignment_UserEntity.ServiceResponder;
 using AutoMapper;
-using System.Diagnostics.Contracts;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 
 namespace Assignment_UserEntity.Service
 {
@@ -47,11 +44,13 @@ namespace Assignment_UserEntity.Service
             if (user is object)
             {
                 _context.Users.Remove(user);
-                await Save();
-                response.Success = true;
-                response.Data = $"User with id: {id} is removed successfully";
-                response.Message = "User Removed";
-                return response;
+                if (await Save())
+                {
+                    response.Success = true;
+                    response.Data = $"User with id: {id} is removed successfully";
+                    response.Message = "User Removed";
+                    return response;
+                }
             }
             response.Success = false;
             response.Message = "User not found";
@@ -80,7 +79,7 @@ namespace Assignment_UserEntity.Service
         {
             ServiceResponse<UserDto> response = new();
             //get the matching user and update its data
-            var toUpdate = await _context.Users.FindAsync(id);
+            var toUpdate = await _context.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (toUpdate is object)
             {
                 toUpdate.Email = updateUser.Email;
@@ -101,12 +100,7 @@ namespace Assignment_UserEntity.Service
 
         private async Task<bool> Save()
         {
-            var a = await _context.SaveChangesAsync();
-            if (a >= 0)
-            {
-                return true;
-            }
-            return false;
+            return await _context.SaveChangesAsync() > 0 ? true : false;
         }
     }
 }

@@ -25,6 +25,10 @@ namespace Assignment_UserEntity.Controllers
         [Route("GetUser/{id}")] //defined route using attribute routing
         public async Task<IActionResult> GetUserAsync(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(id);
+            }
             try
             {
                 var res = await _userEntityService.GetUserAsync(id);
@@ -60,7 +64,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data,res.Message);
+                return Ok(res.Data, res.Message);
 
             }
             catch (Exception ex)
@@ -85,7 +89,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data,res.Message);
+                return Ok(res.Data, res.Message);
 
             }
             catch (Exception ex)
@@ -113,7 +117,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data,res.Message);
+                return Ok(res.Data, res.Message);
             }
             catch (Exception ex)
             {
