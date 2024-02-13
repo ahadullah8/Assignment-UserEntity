@@ -14,7 +14,7 @@ namespace Assignment_UserEntity.Controllers
         {
             ResponseDto response = new();
             response.StatusCode = StatusCodes.Status200OK;
-            response.Message = "Request completed successfully";
+            response.Message = "Success";
             response.Payload = value;
             response.Success = true;
             return new OkObjectResult(response);
