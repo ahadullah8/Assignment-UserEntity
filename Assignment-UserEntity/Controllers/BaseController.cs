@@ -39,6 +39,7 @@ namespace Assignment_UserEntity.Controllers
         {
             ResponseDto response = new();
             response.StatusCode = StatusCodes.Status400BadRequest;
+            response.Message = "Something went wrong";
             response.Payload = value;
             response.Success = false;
             return new BadRequestObjectResult(response);

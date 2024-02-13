@@ -1,5 +1,5 @@
 
-using Assignment_UserEntity.Model;
+using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Service;
 using Assignment_UserEntity.Service.Contract;
 using Microsoft.AspNetCore.Mvc;

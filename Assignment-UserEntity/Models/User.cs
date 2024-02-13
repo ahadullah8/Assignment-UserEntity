@@ -1,4 +1,4 @@
-﻿namespace Assignment_UserEntity.Model
+﻿namespace Assignment_UserEntity.Models
 {
     public class User
     {

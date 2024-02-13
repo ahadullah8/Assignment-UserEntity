@@ -1,4 +1,4 @@
-﻿using Assignment_UserEntity.Model;
+﻿using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Service.Contract;
 using Assignment_UserEntity.ServiceResponder;

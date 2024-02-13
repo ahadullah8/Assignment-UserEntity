@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Assignment_UserEntity.Model
+namespace Assignment_UserEntity.Models
 {
     public class AppDbContext : DbContext
     {
