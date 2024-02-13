@@ -20,7 +20,7 @@ namespace Assignment_UserEntity
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddControllers();
             builder.Services.AddScoped<IUserEntityService, UserEntityService>();
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

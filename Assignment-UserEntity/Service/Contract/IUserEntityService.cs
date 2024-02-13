@@ -17,7 +17,7 @@ namespace Assignment_UserEntity.Service.Contract
         /// </summary>
         /// <param name="newUser">Data of new user</param>
         /// <returns></returns>
-        Task<ServiceResponse<UserDto>> AddUserAsync(UserDto? newUser);
+        Task<ServiceResponse<UserDto>> AddUserAsync(UserDto newUser);
 
         /// <summary>
         /// gets user by id and update the content of the already existing user

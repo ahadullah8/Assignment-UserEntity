@@ -16,19 +16,18 @@ namespace Assignment_UserEntity.Service
             _mapper = mapper;
             _context = context;
         }
-        public async Task<ServiceResponse<UserDto>> AddUserAsync(UserDto? newUser)
+        public async Task<ServiceResponse<UserDto>> AddUserAsync(UserDto newUser)
         {
 
             ServiceResponse<UserDto> response = new();
-            if (newUser == null)
-            {
-                response.Success = false;
-                response.Message = "Object is null";
-                return response;
-            }
             var toAdd = _mapper.Map<User>(newUser);
             await _context.Users.AddAsync(toAdd);
-            await Save();
+            if (!await Save())
+            {
+                response.Success = false;
+                response.Message = "Some error occured while making changes to database";
+                response.Data = null;
+            }
             response.Success = true;
             response.Message = "User Added Successfully";
             response.Data = newUser;
@@ -44,13 +43,17 @@ namespace Assignment_UserEntity.Service
             if (user is object)
             {
                 _context.Users.Remove(user);
-                if (await Save())
+                if (!await Save())
                 {
-                    response.Success = true;
-                    response.Data = $"User with id: {id} is removed successfully";
-                    response.Message = "User Removed";
+                    response.Success = false;
+                    response.Data = null;
+                    response.Message = "Some error occured while making changes to database";
                     return response;
                 }
+                response.Success = true;
+                response.Data = $"User with id: {id} is removed successfully";
+                response.Message = "User Removed";
+                return response;
             }
             response.Success = false;
             response.Message = "User not found";
@@ -87,7 +90,15 @@ namespace Assignment_UserEntity.Service
                 toUpdate.FirstName = updateUser.FirstName;
                 toUpdate.LastName = updateUser.LastName;
                 _context.Users.Update(toUpdate);
-                await Save();
+                //check if changes are made successfully
+                if (!await Save())
+                {
+                    response.Success = false;
+                    response.Message = "Some error occured while making changes to database";
+                    response.Data = null;
+                    return response;
+                }
+                //everything went smoothly
                 response.Success = true;
                 response.Message = "User updated";
                 response.Data = updateUser;
