@@ -1,4 +1,5 @@
 ﻿using Assignment_UserEntity.Dtos;
+using Assignment_UserEntity.Helpers.Validator;
 using Assignment_UserEntity.Service.Contract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,12 +52,9 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("AddUser")]
+        [ValidateModelState]
         public async Task<IActionResult> AddUserAsync(UserDto newUser)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("One or more validations failed");
-            }
             try
             {
                 var res = await _userEntityService.AddUserAsync(newUser);
@@ -108,15 +106,12 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("UpdateUser/{id}")]
+        [ValidateModelState]
         public async Task<IActionResult> UpdateUserAsync(int id, UserDto userDTO)
         {
             if (id <= 0)
             {
                 return BadRequest(id + " is not a valid id");
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("One or more validations failed");
             }
             try
             {
