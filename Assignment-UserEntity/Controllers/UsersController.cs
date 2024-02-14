@@ -24,18 +24,19 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
+        [ValidateModelState]
         public async Task<IActionResult> GetUserAsync(int id)
         {
             if (id <= 0)
             {
-                return BadRequest(id + " is not a valid id");
+                return BadRequest("Invalid id");
             }
             try
             {
                 var res = await _userEntityService.GetUserAsync(id);
                 if (res.Success)
                 {
-                    return Ok(res.Data, res.Message);
+                    return Ok(res.Data);
                 }
                 return BadRequest(res.Message);
 
@@ -62,7 +63,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data, res.Message);
+                return Ok(res.Data);
 
             }
             catch (Exception ex)
@@ -78,11 +79,12 @@ namespace Assignment_UserEntity.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("RemoveUser/{id}")]
+        [ValidateModelState]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
             if (id <= 0)
             {
-                return BadRequest(id + " is not a valid id");
+                return BadRequest("Invalid id");
             }
             try
             {
@@ -91,7 +93,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data, res.Message);
+                return Ok(res.Data);
 
             }
             catch (Exception ex)
@@ -111,7 +113,7 @@ namespace Assignment_UserEntity.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest(id + " is not a valid id");
+                return BadRequest("Invalid id");
             }
             try
             {
@@ -120,7 +122,7 @@ namespace Assignment_UserEntity.Controllers
                 {
                     return BadRequest(res.Message);
                 }
-                return Ok(res.Data, res.Message);
+                return Ok(res.Data);
             }
             catch (Exception ex)
             {

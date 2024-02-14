@@ -20,6 +20,7 @@ namespace Assignment_UserEntity
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddControllers();
             builder.Services.AddScoped<IUserEntityService, UserEntityService>();
+            //db context service is registered so that it can be injected where ever it is needed through dependency injection
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
