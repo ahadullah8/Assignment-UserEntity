@@ -13,7 +13,7 @@ namespace Assignment_UserEntity.Helpers.Validator
                 var response = new ResponseDto()
                 {
                     Message = "Error",
-                    Payload = "One or more validation faliure occure",
+                    Payload = "One or more validations failed",
                     StatusCode = StatusCodes.Status400BadRequest,
                     Success = false
                 };
