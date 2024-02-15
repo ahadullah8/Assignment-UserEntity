@@ -18,14 +18,6 @@ namespace Assignment_UserEntity.Controllers
             response.Payload = value;
             return new OkObjectResult(response);
         }
-        //protected OkObjectResult Ok([ActionResultObjectValue] object? value, string message)
-        //{
-        //    ResponseDto response = new();
-        //    response.StatusCode = StatusCodes.Status200OK;
-        //    response.Message = message;
-        //    response.Payload = value;
-        //    return new OkObjectResult(response);
-        //}
 
         public override BadRequestObjectResult BadRequest([ActionResultObjectValue] object? value)
         {
