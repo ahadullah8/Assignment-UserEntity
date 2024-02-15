@@ -20,6 +20,7 @@ namespace Assignment_UserEntity.Service
         {
 
             ServiceResponse<UserDto> response = new();
+            // map the input to user entity object and save it to db
             var toAdd = _mapper.Map<User>(newUser);
             await _context.Users.AddAsync(toAdd);
             if (!await Save())
@@ -38,8 +39,8 @@ namespace Assignment_UserEntity.Service
         public async Task<ServiceResponse<string>> DeleteUserAsync(int id)
         {
             ServiceResponse<string> response = new();
+            //find user by id if found remove it from db
             var user = await _context.Users.FindAsync(id);
-            //find user by id
             if (user is object)
             {
                 _context.Users.Remove(user);
@@ -64,8 +65,8 @@ namespace Assignment_UserEntity.Service
         public async Task<ServiceResponse<UserDto>> GetUserAsync(int id)
         {
             ServiceResponse<UserDto> response = new();
+            //find user by id and check if user found or not
             var userDetails = await _context.Users.FindAsync(id);
-            //check if user found or not
             if (userDetails is object)
             {
                 response.Success = true;
