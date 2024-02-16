@@ -1,12 +1,15 @@
 ﻿using Assignment_UserEntity.Dtos;
+using Assignment_UserEntity.Helpers.CustomAuthFilter;
 using Assignment_UserEntity.Helpers.Validator;
 using Assignment_UserEntity.Service.Contract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assignment_UserEntity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomAuthFilter]
     public class UsersController : BaseController
     {
 
@@ -25,6 +28,7 @@ namespace Assignment_UserEntity.Controllers
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
         [ValidateModelState]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUserAsync(int id)
         {
             if (id <= 0)

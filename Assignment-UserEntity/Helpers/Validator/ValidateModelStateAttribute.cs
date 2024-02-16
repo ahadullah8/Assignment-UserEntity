@@ -8,6 +8,11 @@ namespace Assignment_UserEntity.Helpers.Validator
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            if (context==null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            
             if (!context.ModelState.IsValid)
             {
                 var response = new ResponseDto()
