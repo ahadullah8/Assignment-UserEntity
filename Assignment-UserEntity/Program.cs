@@ -1,12 +1,15 @@
 
+using Assignment_UserEntity.Data.Seeding;
+using Assignment_UserEntity.Migrations;
 using Assignment_UserEntity.Models;
-using Assignment_UserEntity.Service;
-using Assignment_UserEntity.Service.Contract;
+using Assignment_UserEntity.Services;
+using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Writers;
 using System.Text;
 
 namespace Assignment_UserEntity
@@ -60,6 +63,7 @@ namespace Assignment_UserEntity
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            var userManager =  app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -68,6 +72,7 @@ namespace Assignment_UserEntity
                 app.UseSwaggerUI();
             }
 
+            SeedDefaultUser.SeedAdminUserAsync(userManager).GetAwaiter().GetResult();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

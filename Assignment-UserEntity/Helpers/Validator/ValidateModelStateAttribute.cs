@@ -17,10 +17,11 @@ namespace Assignment_UserEntity.Helpers.Validator
             {
                 var response = new ResponseDto()
                 {
-                    Message = "Error",
-                    Payload = "One or more validations failed",
+                    Message = "Validation Error",
+                    Payload = null,
                     StatusCode = StatusCodes.Status400BadRequest,
-                    Success = false
+                    Success = false,
+                    Errors = context.ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList()
                 };
                 context.Result = new BadRequestObjectResult(response);
             }

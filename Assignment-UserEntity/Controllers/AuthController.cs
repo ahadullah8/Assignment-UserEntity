@@ -1,7 +1,7 @@
 ﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Helpers.CustomAuthFilter;
 using Assignment_UserEntity.Helpers.Validator;
-using Assignment_UserEntity.Service.Contract;
+using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +28,8 @@ namespace Assignment_UserEntity.Controllers
         {
             try
             {
-                var res = await _authService.RegisterAsync(registerDto);
-                if (res.Success)
-                {
-                    return Ok(res.Data);
-                }
-                return BadRequest(res.Message);
+                return Ok(await _authService.RegisterAsync(registerDto));
+                
             }
             catch (Exception ex)
             {
@@ -48,12 +44,7 @@ namespace Assignment_UserEntity.Controllers
         {
             try
             {
-                var res = await _authService.LoginAsync(loginDto);
-                if (res.Success)
-                {
-                    return Ok(res.Data);
-                }
-                return BadRequest(res.Message);
+                return Ok(await _authService.LoginAsync(loginDto));
             }
             catch (Exception ex)
             {

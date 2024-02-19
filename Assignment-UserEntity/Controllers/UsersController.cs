@@ -1,7 +1,7 @@
 ﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Helpers.CustomAuthFilter;
 using Assignment_UserEntity.Helpers.Validator;
-using Assignment_UserEntity.Service.Contract;
+using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,18 +31,9 @@ namespace Assignment_UserEntity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetUserAsync(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid id");
-            }
             try
             {
-                var res = await _userEntityService.GetUserAsync(id);
-                if (res.Success)
-                {
-                    return Ok(res.Data);
-                }
-                return BadRequest(res.Message);
+                return Ok(await _userEntityService.GetUserAsync(id));
 
             }
             catch (Exception ex)
@@ -62,13 +53,7 @@ namespace Assignment_UserEntity.Controllers
         {
             try
             {
-                var res = await _userEntityService.AddUserAsync(newUser);
-                if (!res.Success)
-                {
-                    return BadRequest(res.Message);
-                }
-                return Ok(res.Data);
-
+                return Ok(await _userEntityService.AddUserAsync(newUser));
             }
             catch (Exception ex)
             {
@@ -86,19 +71,9 @@ namespace Assignment_UserEntity.Controllers
         [ValidateModelState]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid id");
-            }
             try
             {
-                var res = await _userEntityService.DeleteUserAsync(id);
-                if (!res.Success)
-                {
-                    return BadRequest(res.Message);
-                }
-                return Ok(res.Data);
-
+                return Ok(await _userEntityService.DeleteUserAsync(id));
             }
             catch (Exception ex)
             {
@@ -115,18 +90,10 @@ namespace Assignment_UserEntity.Controllers
         [ValidateModelState]
         public async Task<IActionResult> UpdateUserAsync(int id, UserDto userDTO)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid id");
-            }
             try
             {
-                var res = await _userEntityService.UpdateUserAsync(id, userDTO);
-                if (!res.Success)
-                {
-                    return BadRequest(res.Message);
-                }
-                return Ok(res.Data);
+                return Ok(await _userEntityService.UpdateUserAsync(id, userDTO));
+                
             }
             catch (Exception ex)
             {

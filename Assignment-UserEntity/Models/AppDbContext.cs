@@ -10,5 +10,6 @@ namespace Assignment_UserEntity.Models
         }
 
         public DbSet<User> Users { get; set; }
+
     }
 }
