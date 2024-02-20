@@ -1,6 +1,6 @@
 ﻿using Assignment_UserEntity.Dtos;
-using Assignment_UserEntity.Helpers.CustomAuthFilter;
-using Assignment_UserEntity.Helpers.Validator;
+using Assignment_UserEntity.Middlewares.CustomAuthFilter;
+using Assignment_UserEntity.Middlewares.Validator;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -1,4 +1,5 @@
-﻿using Assignment_UserEntity.Dtos;
+﻿using Assignment_UserEntity.Constants;
+using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Helpers;
 using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services.Contract;
@@ -14,10 +15,10 @@ namespace Assignment_UserEntity.Services
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public AuthService(UserManager<AppUser> userManager, IMapper mapper, IConfiguration configuration)
+        public AuthService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -33,17 +34,16 @@ namespace Assignment_UserEntity.Services
                 throw new Exception("Invalid Credentials");
             }
             // generate token and send it to the controller
-            return GenerateToken(Helper.CreateClaims(user));
+            return GenerateToken(JWTHealper.CreateClaims(user));
         }
 
         public async Task<RegisterDto> RegisterAsync(RegisterDto dto)
         {
             // check if email already exists
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null)
+            if (!await UserExists(dto))
             {
                 // create new app user
-                var newUser = _mapper.Map<AppUser>(dto);
+                var newUser = _mapper.Map<User>(dto);
                 newUser.SecurityStamp = Guid.NewGuid().ToString();
                 var result = await _userManager.CreateAsync(newUser, dto.Password);
                 if (!result.Succeeded)
@@ -55,10 +55,18 @@ namespace Assignment_UserEntity.Services
             throw new Exception("User Already Exists");
         }
 
+        private async Task<bool> UserExists(RegisterDto dto)
+        {
+            if (await _userManager.FindByEmailAsync(dto.Email)!=null || await _userManager.FindByNameAsync(dto.UserName)!=null)
+            {
+                return true;
+            }
+            return false;
+        }
         private string GenerateToken(List<Claim> claims)
         {
-            int expTime = int.Parse(_configuration.GetSection(ApiConsts.JwtConfigExpiryTime).Value);
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection(ApiConsts.JwtConfigSecret).Value));
+            int expTime = int.Parse(_configuration.GetSection(Constants.JwtConstants.JwtConfigExpiryTime).Value);
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection(Constants.JwtConstants.JwtConfigSecret).Value));
             var expirationTime = DateTime.UtcNow.AddMinutes(expTime);
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
@@ -66,7 +74,7 @@ namespace Assignment_UserEntity.Services
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
                 IssuedAt = DateTime.UtcNow,
-                Issuer = _configuration.GetSection(ApiConsts.JwtConfigValidIssuer).Value
+                Issuer = _configuration.GetSection(Constants.JwtConstants.JwtConfigValidIssuer).Value
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

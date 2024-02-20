@@ -4,9 +4,9 @@ using System.Security.Claims;
 
 namespace Assignment_UserEntity.Helpers
 {
-    public class Helper
+    public class JWTHealper
     {
-        public static List<Claim> CreateClaims(AppUser user)
+        public static List<Claim> CreateClaims(User user)
         {
             return new List<Claim>()
             {

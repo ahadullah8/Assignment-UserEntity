@@ -9,7 +9,7 @@ namespace Assignment_UserEntity.Services.Contract
         /// </summary>
         /// <param name="id">identifier of the user</param>
         /// <returns>detials of a user</returns>
-        Task<UserDto> GetUserAsync(int id);
+        Task<UserDto> GetUserAsync(string id);
 
         /// <summary>
         /// takes a user and add it to existing list of users
@@ -24,14 +24,14 @@ namespace Assignment_UserEntity.Services.Contract
         /// <param name="id"></param>
         /// <param name="updateUser"></param>
         /// <returns></returns>
-        Task<UserDto> UpdateUserAsync(int id, UserDto updateUser);
+        Task<UserDto> UpdateUserAsync(string id, UserDto updateUser);
 
         /// <summary>
         /// deletes the user whoes id is given
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> DeleteUserAsync(int id);
+        Task<bool> DeleteUserAsync(string id);
 
 
     }

@@ -1,5 +1,3 @@
-
-using Assignment_UserEntity.Data.Seeding;
 using Assignment_UserEntity.Migrations;
 using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services;
@@ -30,7 +28,7 @@ namespace Assignment_UserEntity
             //db context service is registered so that it can be injected where ever it is needed through dependency injection
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
             //add identity db context
-            builder.Services.AddIdentityCore<AppUser>()
+            builder.Services.AddIdentityCore<User>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
             //add jwt token scheme
@@ -46,8 +44,8 @@ namespace Assignment_UserEntity
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value)),
-                    ValidIssuer = builder.Configuration.GetSection("JwtConfig:ValidIssuer").Value,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection(Constants.JwtConstants.JwtConfigSecret).Value)),
+                    ValidIssuer = builder.Configuration.GetSection(Constants.JwtConstants.JwtConfigValidIssuer).Value,
                     ValidateIssuer = true,
                     ValidateAudience = false,
                     RequireExpirationTime = true,
@@ -63,7 +61,7 @@ namespace Assignment_UserEntity
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-            var userManager =  app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+            var userManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -71,8 +69,6 @@ namespace Assignment_UserEntity
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            SeedDefaultUser.SeedAdminUserAsync(userManager).GetAwaiter().GetResult();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

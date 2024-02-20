@@ -1,6 +1,6 @@
-﻿namespace Assignment_UserEntity.Helpers
+﻿namespace Assignment_UserEntity.Constants
 {
-    public static class ApiConsts
+    public static class JwtConstants
     {
 
         public const string JwtConfigSecret = "JwtConfig:Secret";

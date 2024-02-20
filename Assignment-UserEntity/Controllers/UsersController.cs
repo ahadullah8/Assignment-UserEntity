@@ -1,6 +1,6 @@
 ﻿using Assignment_UserEntity.Dtos;
-using Assignment_UserEntity.Helpers.CustomAuthFilter;
-using Assignment_UserEntity.Helpers.Validator;
+using Assignment_UserEntity.Middlewares.CustomAuthFilter;
+using Assignment_UserEntity.Middlewares.Validator;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +28,7 @@ namespace Assignment_UserEntity.Controllers
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
         [ValidateModelState]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetUserAsync(int id)
+        public async Task<IActionResult> GetUserAsync(string id)
         {
             try
             {
@@ -69,7 +68,7 @@ namespace Assignment_UserEntity.Controllers
         [HttpDelete]
         [Route("RemoveUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        public async Task<IActionResult> DeleteUserAsync(string id)
         {
             try
             {
@@ -88,12 +87,12 @@ namespace Assignment_UserEntity.Controllers
         [HttpPut]
         [Route("UpdateUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> UpdateUserAsync(int id, UserDto userDTO)
+        public async Task<IActionResult> UpdateUserAsync(string id, UserDto userDTO)
         {
             try
             {
                 return Ok(await _userEntityService.UpdateUserAsync(id, userDTO));
-                
+
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Assignment_UserEntity.Dtos;
 
-namespace Assignment_UserEntity.Helpers.CustomAuthFilter
+namespace Assignment_UserEntity.Middlewares.CustomAuthFilter
 {
     public class CustomAuthFilter : ActionFilterAttribute, IAsyncAuthorizationFilter
     {

@@ -4,10 +4,8 @@ namespace Assignment_UserEntity.Dtos
 {
     public class UserDto
     {
-        [Required(ErrorMessage = "First name Required")]
-        public string FirstName { get; set; }
-        [Required(ErrorMessage = "Last name Required")]
-        public string LastName { get; set; }
+        [Required(ErrorMessage = "Full name Required")]
+        public string FullName { get; set; }
         [Required(ErrorMessage = "Email Required")]
         [EmailAddress]
         public string Email { get; set; }
