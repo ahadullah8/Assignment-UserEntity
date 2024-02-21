@@ -2,6 +2,7 @@
 using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services.Contract;
 using AutoMapper;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,11 @@ namespace Assignment_UserEntity.Services
         }
         public async Task<UserDto> AddUserAsync(UserDto newUser)
         {
+            // check if username or email already exists or not
+            if (await UserExists(newUser))
+            {
+                throw new Exception("User already exists");
+            }
             // map the input to user entity object and save it to db
             var toAdd = _mapper.Map<User>(newUser);
             await _context.Users.AddAsync(toAdd);
@@ -89,6 +95,15 @@ namespace Assignment_UserEntity.Services
         private async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() > 0 ? true : false;
+        }
+        private async Task<bool> UserExists(UserDto dto)
+        {
+            var user = await _context.Users.Where(x=>x.UserName == dto.UserName || x.Email==dto.Email).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

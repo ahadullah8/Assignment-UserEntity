@@ -11,5 +11,6 @@ namespace Assignment_UserEntity.Dtos
         public string Email { get; set; }
         [Required(ErrorMessage = "Username Required")]
         public string UserName { get; set; }
+        public string Address { get; set; }
     }
 }

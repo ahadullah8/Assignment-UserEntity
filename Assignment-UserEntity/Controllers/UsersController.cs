@@ -4,6 +4,7 @@ using Assignment_UserEntity.Middlewares.Validator;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Assignment_UserEntity.Controllers
 {
@@ -61,7 +62,7 @@ namespace Assignment_UserEntity.Controllers
         }
 
         /// <summary>
-        /// Find Deletes the user whoes id is given
+        /// Find and Deletes the user whoes id is given
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -89,6 +90,7 @@ namespace Assignment_UserEntity.Controllers
         [ValidateModelState]
         public async Task<IActionResult> UpdateUserAsync(string id, UserDto userDTO)
         {
+            var a = User.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
             try
             {
                 return Ok(await _userEntityService.UpdateUserAsync(id, userDTO));

@@ -5,6 +5,7 @@ using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services.Contract;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,12 +18,14 @@ namespace Assignment_UserEntity.Services
         private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly AppDbContext _context;
 
-        public AuthService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
+        public AuthService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration, AppDbContext context)
         {
             _userManager = userManager;
             _mapper = mapper;
             _configuration = configuration;
+            _context = context;
         }
 
         public async Task<string> LoginAsync(LoginDto dto)
@@ -34,7 +37,7 @@ namespace Assignment_UserEntity.Services
                 throw new Exception("Invalid Credentials");
             }
             // generate token and send it to the controller
-            return GenerateToken(JWTHealper.CreateClaims(user));
+            return GenerateJwtToken(JWTHealper.CreateClaims(user));
         }
 
         public async Task<RegisterDto> RegisterAsync(RegisterDto dto)
@@ -57,13 +60,13 @@ namespace Assignment_UserEntity.Services
 
         private async Task<bool> UserExists(RegisterDto dto)
         {
-            if (await _userManager.FindByEmailAsync(dto.Email)!=null || await _userManager.FindByNameAsync(dto.UserName)!=null)
+            if (await _context.Users.Where(x=>x.UserName==dto.UserName || x.Email==dto.Email).FirstOrDefaultAsync()!=null)
             {
                 return true;
             }
             return false;
         }
-        private string GenerateToken(List<Claim> claims)
+        private string GenerateJwtToken(List<Claim> claims)
         {
             int expTime = int.Parse(_configuration.GetSection(Constants.JwtConstants.JwtConfigExpiryTime).Value);
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection(Constants.JwtConstants.JwtConfigSecret).Value));
