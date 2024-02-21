@@ -1,5 +1,6 @@
-using Assignment_UserEntity.Migrations;
 using Assignment_UserEntity.Models;
+using Assignment_UserEntity.Repositories;
+using Assignment_UserEntity.Repositories.Contrat;
 using Assignment_UserEntity.Services;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,12 +57,15 @@ namespace Assignment_UserEntity
             });
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            //add repositories
+            builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-            var userManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

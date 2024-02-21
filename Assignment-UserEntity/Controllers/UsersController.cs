@@ -29,11 +29,11 @@ namespace Assignment_UserEntity.Controllers
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
         [ValidateModelState]
-        public async Task<IActionResult> GetUserAsync(string id)
+        public IActionResult GetUserAsync(string id)
         {
             try
             {
-                return Ok(await _userEntityService.GetUserAsync(id));
+                return Ok(_userEntityService.GetUser(id));
 
             }
             catch (Exception ex)
@@ -49,11 +49,11 @@ namespace Assignment_UserEntity.Controllers
         [HttpPost]
         [Route("AddUser")]
         [ValidateModelState]
-        public async Task<IActionResult> AddUserAsync(UserDto newUser)
+        public IActionResult AddUser(UserDto newUser)
         {
             try
             {
-                return Ok(await _userEntityService.AddUserAsync(newUser));
+                return Ok(_userEntityService.AddUser(newUser));
             }
             catch (Exception ex)
             {
@@ -69,11 +69,11 @@ namespace Assignment_UserEntity.Controllers
         [HttpDelete]
         [Route("RemoveUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> DeleteUserAsync(string id)
+        public IActionResult DeleteUser(string id)
         {
             try
             {
-                return Ok(await _userEntityService.DeleteUserAsync(id));
+                return Ok(_userEntityService.DeleteUser(id));
             }
             catch (Exception ex)
             {
@@ -88,12 +88,11 @@ namespace Assignment_UserEntity.Controllers
         [HttpPut]
         [Route("UpdateUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> UpdateUserAsync(string id, UserDto userDTO)
+        public IActionResult UpdateUser(string id, UserDto userDTO)
         {
-            var a = User.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
             try
             {
-                return Ok(await _userEntityService.UpdateUserAsync(id, userDTO));
+                return Ok(_userEntityService.UpdateUser(id, userDTO));
 
             }
             catch (Exception ex)

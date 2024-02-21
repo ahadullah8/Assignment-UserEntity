@@ -2,6 +2,7 @@
 using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Helpers;
 using Assignment_UserEntity.Models;
+using Assignment_UserEntity.Repositories.Contrat;
 using Assignment_UserEntity.Services.Contract;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -16,23 +17,21 @@ namespace Assignment_UserEntity.Services
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        private readonly AppDbContext _context;
+        private readonly IAuthRepository _authRepo;
 
-        public AuthService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration, AppDbContext context)
+        public AuthService(IMapper mapper, IConfiguration configuration, IAuthRepository authRepo)
         {
-            _userManager = userManager;
             _mapper = mapper;
             _configuration = configuration;
-            _context = context;
+            _authRepo = authRepo;
         }
 
         public async Task<string> LoginAsync(LoginDto dto)
         {
             //get user by email
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+            var user = await _authRepo.GetUserByEmail(dto.Email);
+            if (user == null || !await _authRepo.CheckPasswork(user,dto.Password))
             {
                 throw new Exception("Invalid Credentials");
             }
@@ -43,29 +42,22 @@ namespace Assignment_UserEntity.Services
         public async Task<RegisterDto> RegisterAsync(RegisterDto dto)
         {
             // check if email already exists
-            if (!await UserExists(dto))
+            if (!await _authRepo.UserExists(dto.Email,dto.UserName))
             {
                 // create new app user
                 var newUser = _mapper.Map<User>(dto);
                 newUser.SecurityStamp = Guid.NewGuid().ToString();
-                var result = await _userManager.CreateAsync(newUser, dto.Password);
+                var result = await _authRepo.CreateUser(newUser, dto.Password);
                 if (!result.Succeeded)
                 {
                     throw new Exception("Unable to create user");
                 }
+                dto.Password = null;
                 return dto;
             }
             throw new Exception("User Already Exists");
         }
 
-        private async Task<bool> UserExists(RegisterDto dto)
-        {
-            if (await _context.Users.Where(x=>x.UserName==dto.UserName || x.Email==dto.Email).FirstOrDefaultAsync()!=null)
-            {
-                return true;
-            }
-            return false;
-        }
         private string GenerateJwtToken(List<Claim> claims)
         {
             int expTime = int.Parse(_configuration.GetSection(Constants.JwtConstants.JwtConfigExpiryTime).Value);
