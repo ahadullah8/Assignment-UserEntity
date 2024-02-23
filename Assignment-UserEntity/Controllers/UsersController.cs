@@ -1,9 +1,12 @@
 ﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Middlewares.CustomAuthFilter;
 using Assignment_UserEntity.Middlewares.Validator;
+using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Assignment_UserEntity.Controllers
@@ -97,6 +100,22 @@ namespace Assignment_UserEntity.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<IActionResult> GetUsers([FromQuery] UserListParameters parameters)
+        {
+            try
+            {
+                var result = await _userEntityService.GetAllUserAsync(parameters);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
                 return BadRequest(ex.Message);
             }
         }

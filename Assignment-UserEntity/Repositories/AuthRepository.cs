@@ -1,5 +1,4 @@
-﻿using Assignment_UserEntity.Dtos;
-using Assignment_UserEntity.Models;
+﻿using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Repositories.Contrat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,16 +22,33 @@ namespace Assignment_UserEntity.Repositories
             return await _userManager.CheckPasswordAsync(user, password);
         }
 
-        public Task<IdentityResult> CreateUser(User user, string password)
+        public async Task<IdentityResult> ConfirmEmailTokenAsync(User user, string token)
         {
-            return _userManager.CreateAsync(user, password);
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public Task<IdentityResult> CreateUser(User user)
+        {
+            return _userManager.CreateAsync(user);
+        }
+
+        public Task<IdentityResult> AddPassword(User user,string password)
+        {
+            return _userManager.AddPasswordAsync(user, password);
+        }
+        public async Task<string> GenerateConfirmatioToken(User user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+        public async Task<bool> HasPassword(User user)
+        {
+            return await _userManager.HasPasswordAsync(user);
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
         }
-
 
         public async Task<bool> UserExists(string email, string userName)
         {

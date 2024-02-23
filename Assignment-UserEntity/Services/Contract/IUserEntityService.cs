@@ -32,6 +32,11 @@ namespace Assignment_UserEntity.Services.Contract
         /// <param name="id"></param>
         /// <returns></returns>
         bool DeleteUser(string id);
+        /// <summary>
+        /// Get all the user from db and return to the user
+        /// </summary>
+        /// <returns>List of userDto </returns>
+        public Task<UserListResponseDto> GetAllUserAsync(UserListParameters parameters);
 
 
     }

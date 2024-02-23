@@ -25,9 +25,9 @@ namespace Assignment_UserEntity.Repositories
             _dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
-             return _dbSet.ToList();
+             return _dbSet;
         }
 
         public T GetById(object id)
