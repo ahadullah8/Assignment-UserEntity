@@ -1,11 +1,17 @@
-using Assignment_UserEntity.Migrations;
+using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Models;
+using Assignment_UserEntity.Repositories;
+using Assignment_UserEntity.Repositories.Contrat;
 using Assignment_UserEntity.Services;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Forms.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Writers;
 using System.Text;
@@ -17,6 +23,9 @@ namespace Assignment_UserEntity
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // urlservice
+            builder.Services.AddHttpContextAccessor();
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -28,7 +37,15 @@ namespace Assignment_UserEntity
             //db context service is registered so that it can be injected where ever it is needed through dependency injection
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
             //add identity db context
-            builder.Services.AddIdentityCore<User>()
+            builder.Services.AddIdentityCore<User>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+
+            })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
             //add jwt token scheme
@@ -55,13 +72,17 @@ namespace Assignment_UserEntity
                 };
             });
 
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            //add repositories
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-            var userManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

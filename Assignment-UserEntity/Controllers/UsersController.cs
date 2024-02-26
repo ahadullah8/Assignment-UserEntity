@@ -1,9 +1,13 @@
 ﻿using Assignment_UserEntity.Dtos;
 using Assignment_UserEntity.Middlewares.CustomAuthFilter;
 using Assignment_UserEntity.Middlewares.Validator;
+using Assignment_UserEntity.Models;
 using Assignment_UserEntity.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace Assignment_UserEntity.Controllers
 {
@@ -28,11 +32,11 @@ namespace Assignment_UserEntity.Controllers
         [HttpGet]
         [Route("GetUser/{id}")] //defined route using attribute routing
         [ValidateModelState]
-        public async Task<IActionResult> GetUserAsync(string id)
+        public IActionResult GetUserAsync(string id)
         {
             try
             {
-                return Ok(await _userEntityService.GetUserAsync(id));
+                return Ok(_userEntityService.GetUser(id));
 
             }
             catch (Exception ex)
@@ -45,34 +49,34 @@ namespace Assignment_UserEntity.Controllers
         /// </summary>
         /// <param name="user">User type</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("AddUser")]
-        [ValidateModelState]
-        public async Task<IActionResult> AddUserAsync(UserDto newUser)
-        {
-            try
-            {
-                return Ok(await _userEntityService.AddUserAsync(newUser));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //[Route("AddUser")]
+        //[ValidateModelState]
+        //public IActionResult AddUser(UserDto newUser)
+        //{
+        //    try
+        //    {
+        //        return Ok(_userEntityService.AddUser(newUser));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         /// <summary>
-        /// Find Deletes the user whoes id is given
+        /// Find and Deletes the user whoes id is given
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
         [Route("RemoveUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> DeleteUserAsync(string id)
+        public IActionResult DeleteUser(string id)
         {
             try
             {
-                return Ok(await _userEntityService.DeleteUserAsync(id));
+                return Ok(_userEntityService.DeleteUser(id));
             }
             catch (Exception ex)
             {
@@ -87,15 +91,31 @@ namespace Assignment_UserEntity.Controllers
         [HttpPut]
         [Route("UpdateUser/{id}")]
         [ValidateModelState]
-        public async Task<IActionResult> UpdateUserAsync(string id, UserDto userDTO)
+        public IActionResult UpdateUser(string id, UserDto userDTO)
         {
             try
             {
-                return Ok(await _userEntityService.UpdateUserAsync(id, userDTO));
+                return Ok(_userEntityService.UpdateUser(id, userDTO));
 
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<IActionResult> GetUsers([FromQuery] UserListParameters parameters)
+        {
+            try
+            {
+                var result = await _userEntityService.GetAllUserAsync(parameters);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
                 return BadRequest(ex.Message);
             }
         }
