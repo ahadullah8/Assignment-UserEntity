@@ -14,7 +14,7 @@ namespace Assignment_UserEntity.Repositories.Contrat
 
         Task<bool> UserExists(string email, string userName);
         Task<string> GenerateConfirmatioToken(User user);
-        Task<IdentityResult> ConfirmEmailTokenAsync(User user,string token);
+        Task<IdentityResult> ConfirmEmailTokenAsync(User user, string token);
 
     }
 }

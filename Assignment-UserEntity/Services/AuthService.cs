@@ -142,7 +142,6 @@ namespace Assignment_UserEntity.Services
             var encodedUrl = WebUtility.HtmlEncode(url);
 
             Console.WriteLine(encodedUrl);
-            //var link = @"https://localhost:7252/api/Auth/ConfirmEmail?replaceToken".Replace("replaceToken", JsonSerializer.Serialize(obj));
             var message = $"Please confirm your account by <a href='{encodedUrl}'>clicking here</a>.";
 
             await _emailService.SendEmailAsync(user.Email, "Confirm your email", message);

@@ -32,7 +32,7 @@ namespace Assignment_UserEntity.Repositories
             return _userManager.CreateAsync(user);
         }
 
-        public Task<IdentityResult> AddPassword(User user,string password)
+        public Task<IdentityResult> AddPassword(User user, string password)
         {
             return _userManager.AddPasswordAsync(user, password);
         }

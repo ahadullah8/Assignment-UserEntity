@@ -16,7 +16,7 @@ namespace Assignment_UserEntity.Services.Contract
         /// </summary>
         /// <param name="newUser">Data of new user</param>
         /// <returns></returns>
-        UserDto AddUser(UserDto newUser);
+        //UserDto AddUser(UserDto newUser);
 
         /// <summary>
         /// gets user by id and update the content of the already existing user

@@ -27,7 +27,7 @@ namespace Assignment_UserEntity.Repositories
 
         public IQueryable<T> GetAll()
         {
-             return _dbSet;
+            return _dbSet;
         }
 
         public T GetById(object id)

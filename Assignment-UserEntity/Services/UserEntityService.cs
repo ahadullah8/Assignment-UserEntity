@@ -4,8 +4,6 @@ using Assignment_UserEntity.Repositories;
 using Assignment_UserEntity.Repositories.Contrat;
 using Assignment_UserEntity.Services.Contract;
 using AutoMapper;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,26 +14,28 @@ namespace Assignment_UserEntity.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
-        public UserEntityService(IMapper mapper, IUserRepository userRepo)
+        private readonly IEmailService _emailService;
+        public UserEntityService(IMapper mapper, IUserRepository userRepo, IEmailService emailService)
         {
             _mapper = mapper;
             _userRepo = userRepo;
+            _emailService = emailService;
         }
-        public UserDto AddUser(UserDto newUser)
-        {
-            // map the input to user entity
-            var toAdd = _mapper.Map<User>(newUser);
+        //public UserDto AddUser(UserDto newUser)
+        //{
+        //    // map the input to user entity
+        //    var toAdd = _mapper.Map<User>(newUser);
 
-            // check if user already exists or not
-            if (_userRepo.UserExists(toAdd))
-            {
-                throw new Exception("User already exists");
-            }
-            _userRepo.Add(toAdd);
-            _userRepo.Save();
-            return newUser;
+        //    // check if user already exists or not
+        //    if (_userRepo.UserExists(toAdd))
+        //    {
+        //        throw new Exception("User already exists");
+        //    }
+        //    _userRepo.Add(toAdd);
+        //    _userRepo.Save();
+        //    return newUser;
 
-        }
+        //}
 
         public bool DeleteUser(string id)
         {

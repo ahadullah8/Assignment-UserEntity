@@ -27,7 +27,7 @@ namespace Assignment_UserEntity.Models
                         ConcurrencyStamp = "cbddf737-ee1b-47e1-99b0-a38d137213cb"
                     }
                 );
-            base.OnModelCreating( builder );
+            base.OnModelCreating(builder);
         }
     }
 }

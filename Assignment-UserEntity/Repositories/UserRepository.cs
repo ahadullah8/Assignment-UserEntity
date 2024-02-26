@@ -14,8 +14,8 @@ namespace Assignment_UserEntity.Repositories
 
         public bool UserExists(User newUser)
         {
-             var user = _context.Users.Where(x=>x.UserName == newUser.UserName || x.Email== newUser.Email).FirstOrDefault();
-            if (user==null)
+            var user = _context.Users.Where(x => x.UserName == newUser.UserName || x.Email == newUser.Email).FirstOrDefault();
+            if (user == null)
             {
                 return false;
             }

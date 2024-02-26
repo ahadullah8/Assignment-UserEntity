@@ -49,20 +49,20 @@ namespace Assignment_UserEntity.Controllers
         /// </summary>
         /// <param name="user">User type</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("AddUser")]
-        [ValidateModelState]
-        public IActionResult AddUser(UserDto newUser)
-        {
-            try
-            {
-                return Ok(_userEntityService.AddUser(newUser));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //[Route("AddUser")]
+        //[ValidateModelState]
+        //public IActionResult AddUser(UserDto newUser)
+        //{
+        //    try
+        //    {
+        //        return Ok(_userEntityService.AddUser(newUser));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         /// <summary>
         /// Find and Deletes the user whoes id is given
